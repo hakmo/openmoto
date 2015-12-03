@@ -1,36 +1,30 @@
 #!/usr/bin/python
 
 import bsp as openmoto_bsp      # bsp should point to the bsp file for your hw
+import openmoto_signals
+import openmoto_input
+
 import threading
-import time
 
-# Thread class for PWM Turn signals
-class turnThread (threading.Thread):
-    def __init__(self, threadID, name, output):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.out = output
-        self.value = openmoto_bsp.turnsignal_min
-    def run(self):
-        print "Starting " + self.name
-        blink_turn(self.name, self.out, self.value)
-        print "Exiting " + self.name
+class inputEvent(dict):
+    def __missing__(self, key):
+        return 0
 
-# Controls the turn signal PWM values
-def blink_turn(threadName, output, value):
-    step = openmoto_bsp.turnsignal_step
-    while 1:
-        output(value)
-        time.sleep(openmoto_bsp.turnsignal_delay)
-        value += step
-        if value >= openmoto_bsp.turnsignal_max or value <= openmoto_bsp.turnsignal_min:
-            step = -step
-        
+eventGroup = inputEvent()
 
+# Set up events
+eventGroup['leftturn'] = threading.Event()
+eventGroup['rightturn'] = threading.Event()
 
-thread_right = turnThread(1, "RightTurn", openmoto_bsp.output_turnr);
+# Set up threads
+thread_right = openmoto_signals.turnThread(1, "RightTurn", openmoto_bsp.output_turnr, eventGroup['rightturn']);
+thread_left = openmoto_signals.turnThread(2, "LeftTurn", openmoto_bsp.output_turnl, eventGroup['leftturn']);
 
+# Start threads
 thread_right.start()
+thread_left.start()
+
+# Start getting inputs
+openmoto_input.getTestInputs(eventGroup)
 
 print "Exit main"
