@@ -1,5 +1,5 @@
 
-import bsp as openmoto_bsp
+import bsp as openmoto_bsp      # bsp should point to the bsp file for your hw
 
 import msvcrt
 import threading
@@ -34,25 +34,47 @@ import time
 ##    print "Exiting getInputs"
 
 
-# Function for reading test inputs
+# Function for reading test inputs from keyboard
 def getTestInputs(events):
     print "Starting getTestInputs"
     while 1:
-        key =  msvcrt.getch()
-        if key == 'a':
-            print "Got a"
-            # toggle left turn event
-            if events['leftturn'].isSet():
-                events['leftturn'].clear()
+        key =  ord(msvcrt.getch())
+        # Start (s)
+        if openmoto_bsp.input_start(key):
+            # toggle start event
+            if events['start'].isSet():
+               events['start'].clear()
             else :
-                events['leftturn'].set()
-        elif key == 'd':
-            print "Got d"
-            # toggle right turn event
-            if events['rightturn'].isSet():
-                events['rightturn'].clear()
+                events['start'].set()
+        # Light (l)
+        if openmoto_bsp.input_light(key):
+            # toggle start event
+            if events['light'].isSet():
+               events['light'].clear()
             else :
-                events['rightturn'].set()
+                events['light'].set()
+        # Handle special keys (arrow, etc)
+        if key == 224:
+            key =  ord(msvcrt.getch())
+            #print "Key2 is " + str(key)
+            if openmoto_bsp.input_turnl(key):
+                # toggle left turn event
+                if events['leftturn'].isSet():
+                    events['leftturn'].clear()
+                else :
+                    events['leftturn'].set()
+            if openmoto_bsp.input_turnr(key):
+                # toggle right turn event
+                if events['rightturn'].isSet():
+                    events['rightturn'].clear()
+                else :
+                    events['rightturn'].set()
+            if openmoto_bsp.input_brake(key):
+                # toggle brake event
+                if events['brake'].isSet():
+                    events['brake'].clear()
+                else :
+                    events['brake'].set()
     print "Exiting getTestInputs"
 
     

@@ -16,28 +16,46 @@ brakelight_delay = 0.1
 # Inputs #
 ##########
 
-def input_turnr():      # returns the state of the right turn input
+def input_turnr(key):       # returns the state of the right turn input
+    if key == 77:           # (right arrow)
+        return 1
+    else:
+        return 0
+
+def input_start(key):       # returns the state of the start input
+    if key == 115:          # (s)
+        return 1
+    else:
+        return 0
+
+def input_horn(key):        # returns the state of the horn input
+    if key == 104:          # (h)
+        return 1
+    else:
+        return 0
+
+def input_turnl(key):       # returns the state of the left turn input
+    if key == 75:           # (left arrow)
+        return 1
+    else:
+        return 0
+
+def input_config(key):     # returns the state of the config input
     return 0
 
-def input_start():      # returns the state of the start input
-    return 0
+def input_light(key):       # returns the state of the light input
+    if key == 108:          # (l)
+        return 1
+    else:
+        return 0
 
-def input_horn():       # returns the state of the horn input
-    return 0
+def input_brake(key):       # returns the state of the brake input
+    if key == 80:           # (down arrow)
+        return 1
+    else:
+        return 0
 
-def input_turnl():      # returns the state of the left turn input
-    return 0
-
-def input_config():     # returns the state of the config input
-    return 0
-
-def input_light():      # returns the state of the light input
-    return 0
-
-def input_brake():      # returns the state of the brake input
-    return 0
-
-def input_lock():       # returns the state of the lock input
+def input_lock(key):       # returns the state of the lock input
     return 0
 
 
@@ -66,6 +84,7 @@ def output_lighthi(o):  # sets light hi output to given value
     return 0
 
 def output_brake(o):    # sets brake output to given value
+    print "Brake: " + str(o) + '\n'
     return 0
 
 def output_aux(o):      # sets aux output to given value
